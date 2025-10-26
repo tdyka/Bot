@@ -12,7 +12,6 @@ def show_cocktail_list(bot, chat_id):
 
     markup = types.InlineKeyboardMarkup(row_width=2)
 
-    # Створюємо кнопки для кожного коктейлю з БД
     cocktail_buttons = []
     for cocktail in cocktails:
         cocktail_buttons.append(
@@ -22,7 +21,6 @@ def show_cocktail_list(bot, chat_id):
             )
         )
 
-    # Додаємо кнопки по 2 в рядок
     for i in range(0, len(cocktail_buttons), 2):
         if i + 1 < len(cocktail_buttons):
             markup.add(cocktail_buttons[i], cocktail_buttons[i + 1])
@@ -46,17 +44,14 @@ def send_cocktail_card(bot, call, cocktail_id):
     caption = f"{cocktail['name']} – {cocktail['price']} грн\n{cocktail['description']}"
 
     markup = types.InlineKeyboardMarkup()
-    # Перший рядок: Додати в кошик
     markup.add(
         types.InlineKeyboardButton("🛒 Додати в кошик", callback_data=f"add_cart_{cocktail['name']}")
     )
-    # Другий рядок: Купити на сайті і Назад
     markup.add(
         types.InlineKeyboardButton("🟢 Купити на сайті 🟢",
                                    url=f"https://example.com/product/{cocktail['name'].lower().replace(' ', '-')}"),
         types.InlineKeyboardButton("⬅️ Назад", callback_data="back_cocktail")
     )
-    # Третій рядок: Головне меню
     markup.add(
         types.InlineKeyboardButton("🏠 Головне меню", callback_data="back_main")
     )
@@ -78,7 +73,6 @@ def send_cocktail_card(bot, call, cocktail_id):
 
 def handle_cocktail_callback(bot, call, cocktail_id):
     """Обробляє callback для коктейлів з БД"""
-    # cocktail_id вже є числом з main.py
     if isinstance(cocktail_id, str):
         cocktail_id = int(cocktail_id)
 

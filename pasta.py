@@ -12,7 +12,6 @@ def show_pasta_list(bot, chat_id):
 
     markup = types.InlineKeyboardMarkup(row_width=2)
 
-    # Створюємо кнопки для кожної пасти з БД
     pasta_buttons = []
     for item in pasta_items:
         pasta_buttons.append(
@@ -22,7 +21,6 @@ def show_pasta_list(bot, chat_id):
             )
         )
 
-    # Додаємо кнопки по 2 в рядок
     for i in range(0, len(pasta_buttons), 2):
         if i + 1 < len(pasta_buttons):
             markup.add(pasta_buttons[i], pasta_buttons[i + 1])
@@ -46,17 +44,14 @@ def send_pasta_card(bot, call, pasta_id):
     caption = f"{pasta['name']} – {pasta['price']} грн\n{pasta['description']}"
 
     markup = types.InlineKeyboardMarkup()
-    # Перший рядок: Додати в кошик
     markup.add(
         types.InlineKeyboardButton("🛒 Додати в кошик", callback_data=f"add_cart_{pasta['name']}")
     )
-    # Другий рядок: Купити на сайті і Назад
     markup.add(
         types.InlineKeyboardButton("🟢 Купити на сайті 🟢",
                                    url=f"https://example.com/product/{pasta['name'].lower().replace(' ', '-')}"),
         types.InlineKeyboardButton("⬅️ Назад", callback_data="back_pasta")
     )
-    # Третій рядок: Головне меню
     markup.add(
         types.InlineKeyboardButton("🏠 Головне меню", callback_data="back_main")
     )
@@ -82,12 +77,10 @@ def handle_pasta_callback(bot, call, pasta_id):
     if isinstance(pasta_id, str):
         pasta_id = int(pasta_id)
 
-    # Перевіряємо, чи існує паста
     pasta = db.get_product_by_id(pasta_id)
 
     if not pasta:
         bot.answer_callback_query(call.id, "❌ Пасту не знайдено")
         return
 
-    # Передаємо ID
     send_pasta_card(bot, call, pasta_id)

@@ -22,7 +22,6 @@ def show_grill_list(bot, chat_id):
             )
         )
 
-    # Додаємо кнопки по 2 в рядок
     for i in range(0, len(grill_buttons), 2):
         if i + 1 < len(grill_buttons):
             markup.add(grill_buttons[i], grill_buttons[i + 1])
@@ -46,17 +45,14 @@ def send_grill_card(bot, call, grill_id):
     caption = f"{grill['name']} – {grill['price']} грн\n{grill['description']}"
 
     markup = types.InlineKeyboardMarkup()
-    # Перший рядок: Додати в кошик
     markup.add(
         types.InlineKeyboardButton("🛒 Додати в кошик", callback_data=f"add_cart_{grill['name']}")
     )
-    # Другий рядок: Купити на сайті і Назад
     markup.add(
         types.InlineKeyboardButton("🟢 Купити на сайті 🟢",
                                    url=f"https://example.com/product/{grill['name'].lower().replace(' ', '-')}"),
         types.InlineKeyboardButton("⬅️ Назад", callback_data="back_grill")
     )
-    # Третій рядок: Головне меню
     markup.add(
         types.InlineKeyboardButton("🏠 Головне меню", callback_data="back_main")
     )
@@ -89,5 +85,4 @@ def handle_grill_callback(bot, call, grill_id):
         bot.answer_callback_query(call.id, "❌ Страву не знайдено")
         return
 
-    # Передаємо ID
     send_grill_card(bot, call, grill_id)

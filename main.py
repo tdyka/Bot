@@ -34,8 +34,6 @@ bot = telebot.TeleBot(BOT_TOKEN)
 print("✅ Бот успішно запущено!")
 
 
-# === ФУНКЦІЇ АВТОМАТИЧНОГО БЕКАПУ ===
-
 def backup_database():
     """Функція для ручного бекапу"""
     try:
@@ -93,7 +91,6 @@ def menu(message):
                 )
             )
 
-        # Додаємо кнопку кошика
         cart_count = len(cart.get_cart(message.from_user.id))
         cart_text = f"🛒 Кошик ({cart_count})" if cart_count > 0 else "🛒 Кошик"
 
@@ -131,7 +128,6 @@ def my_orders_command(message):
 def callback_query(call):
     """Обробник всіх callback запитів"""
     try:
-        # Категорії
         if call.data.startswith("cat_"):
             category = call.data.split("_", 1)[1]
             bot.answer_callback_query(call.id)
@@ -258,6 +254,5 @@ def callback_query(call):
         bot.answer_callback_query(call.id, "❌ Виникла помилка. Спробуйте ще раз.")
 
 
-# Запускаємо бота
 print("🤖 Бот працює. Натисніть Ctrl+C для зупинки.")
 bot.polling(non_stop=True)

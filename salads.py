@@ -12,7 +12,6 @@ def show_salad_list(bot, chat_id):
 
     markup = types.InlineKeyboardMarkup(row_width=2)
 
-    # Створюємо кнопки для кожного салату з БД
     salad_buttons = []
     for item in salad_items:
         salad_buttons.append(
@@ -22,7 +21,6 @@ def show_salad_list(bot, chat_id):
             )
         )
 
-    # Додаємо кнопки по 2 в рядок
     for i in range(0, len(salad_buttons), 2):
         if i + 1 < len(salad_buttons):
             markup.add(salad_buttons[i], salad_buttons[i + 1])
@@ -46,17 +44,14 @@ def send_salad_card(bot, call, salad_id):
     caption = f"{salad['name']} – {salad['price']} грн\n{salad['description']}"
 
     markup = types.InlineKeyboardMarkup()
-    # Перший рядок: Додати в кошик
     markup.add(
         types.InlineKeyboardButton("🛒 Додати в кошик", callback_data=f"add_cart_{salad['name']}")
     )
-    # Другий рядок: Купити на сайті і Назад
     markup.add(
         types.InlineKeyboardButton("🟢 Купити на сайті 🟢",
                                    url=f"https://example.com/product/{salad['name'].lower().replace(' ', '-')}"),
         types.InlineKeyboardButton("⬅️ Назад", callback_data="back_salad")
     )
-    # Третій рядок: Головне меню
     markup.add(
         types.InlineKeyboardButton("🏠 Головне меню", callback_data="back_main")
     )
@@ -82,12 +77,10 @@ def handle_salad_callback(bot, call, salad_id):
     if isinstance(salad_id, str):
         salad_id = int(salad_id)
 
-    # Перевіряємо, чи існує салат
     salad = db.get_product_by_id(salad_id)
 
     if not salad:
         bot.answer_callback_query(call.id, "❌ Салат не знайдено")
         return
 
-    # Передаємо ID
     send_salad_card(bot, call, salad_id)
