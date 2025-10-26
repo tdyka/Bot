@@ -1,8 +1,6 @@
 from telebot import types
 from database import db
 
-# Тимчасове сховище кошиків (в пам'яті)
-# Ключ: telegram_id, Значення: список товарів
 user_carts = {}
 
 
@@ -84,10 +82,8 @@ def show_cart(bot, chat_id, telegram_id):
     message += f"━━━━━━━━━━━━━━━\n"
     message += f"💰 Разом: {total} грн"
 
-    # Кнопки
     markup = types.InlineKeyboardMarkup(row_width=2)
 
-    # Кнопки для видалення товарів
     for item in cart:
         markup.add(
             types.InlineKeyboardButton(
@@ -96,7 +92,6 @@ def show_cart(bot, chat_id, telegram_id):
             )
         )
 
-    # Кнопки дій
     markup.add(
         types.InlineKeyboardButton("🗑 Очистити кошик", callback_data="clear_cart"),
         types.InlineKeyboardButton("✅ Оформити замовлення", callback_data="checkout")
@@ -216,10 +211,9 @@ def create_order_from_cart(bot, chat_id, telegram_id, payment_method):
         bot.send_message(chat_id, "❌ Помилка при створенні замовлення")
         return
 
-    # Очищаємо кошик
+
     clear_cart(telegram_id)
 
-    # Повідомлення про успіх
     total = sum(item['price'] * item['quantity'] for item in valid_items)
     payment_text = "💳 Карткою онлайн" if payment_method == "card" else "💵 Готівкою при отриманні"
 
@@ -237,7 +231,6 @@ def create_order_from_cart(bot, chat_id, telegram_id, payment_method):
 
     bot.send_message(chat_id, message, reply_markup=markup)
 
-    # Імітуємо процес доставки (в реальності це робить ваш сайт)
     from orders import simulate_delivery
     simulate_delivery(bot, order_number)
 
