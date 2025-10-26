@@ -4,7 +4,6 @@ from datetime import datetime
 from telebot import types
 from database import db
 
-# Статуси замовлення
 ORDER_STATUSES = {
     "ordered": "🆕 Замовлення оформлено",
     "confirmed": "✅ Підтверджено",
@@ -51,7 +50,6 @@ def show_my_orders(bot, chat_id, user_id):
         )
         return
 
-    # Формуємо повідомлення зі списком
     message = "📦 <b>Ваші замовлення:</b>\n\n"
 
     markup = types.InlineKeyboardMarkup(row_width=1)
@@ -147,7 +145,6 @@ def show_order_details(bot, chat_id, order_number):
             hist_msg = history.get('message', 'Статус змінено')
             message += f"  {hist_emoji} {hist_date} - {hist_msg}\n"
 
-    # Кнопки
     markup = types.InlineKeyboardMarkup(row_width=2)
 
     # Можна скасувати тільки нові або підтверджені
@@ -313,7 +310,6 @@ def notify_status_change(bot, order_id, new_status, message=None):
     )
 
     bot.send_message(order['telegram_id'], text, reply_markup=markup)
-
 
 # Імітація доставки
 def simulate_delivery(bot, order_number):
